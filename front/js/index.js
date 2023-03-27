@@ -9,13 +9,15 @@ fetch("http://localhost:3000/api/products")
   // affichage en cas d'erreur ou de serveur non lancé
   .catch((error) => {
     document.querySelector("#items").innerHTML =
-      "<article><h3>Erreur</h3><p>Veuillez verifier que le serveur est bien lancé et sur le port 3000</p></article>";
+      "<article><h3>Erreur</h3><p>Veuillez verifier que le serveur est bien lancé sur le port 3000</p></article>";
     console.log(
-      "erreur veuillez verifier que le Serveur est bien lancé et sur le port 3000 " +
+      "erreur veuillez verifier que le Serveur est bien lancé sur le port 3000 " +
         error
     );
   });
 // envoyer les resultats de l'api dans les cartes
+
+//fonction affichage des produits sur la page d'accueil
 
 function addProducts(data) {
   console.log(data);

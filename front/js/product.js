@@ -2,11 +2,6 @@
 let params = new URL(document.location).searchParams;
 let id = params.get("id");
 console.log(id);
-let productName = 0;
-let productPrice = 0;
-let productImage = 0;
-let productTxt = 0;
-
 fetch(`http://localhost:3000/api/products/${id}`)
   .then((response) => response.json())
   .then((res) => {
@@ -23,11 +18,12 @@ fetch(`http://localhost:3000/api/products/${id}`)
         error
     );
   });
-
+// fonction d'affichage de tous les éléments du produit sur la page
 function showProduct(product) {
   //déclaration des divers éléments de l'objet produit pour pouvoir les réutiliser dans les fonctions
 
   const { imageUrl, altTxt, colors, description, price, name } = product;
+
   productName = name;
   productPrice = price;
   productDescription = altTxt;
@@ -66,16 +62,12 @@ function addColor(colors) {
 // Fin affichage du produit sur la page produit
 // ---------------------------------------------------------------
 // Début addCart
-
+// fonction d'appel de la fonction d'envoi vers le localstorage
 function addToCart() {
   const btnAdd = document.querySelector("#addToCart");
-  // test fonctionnement bouton
-  //  btnAdd.addEventListener('click', e => console.log(e))
   btnAdd.addEventListener("click", (e) => {
     let productColor = document.querySelector("#colors").value;
     let productQuantity = document.querySelector("#quantity").value;
-    //console.log(productColor);
-    //console.log(productQuantity);
 
     // verification si les conditions sont bien respectée alert temporaire
     // si les conditions sont respectée création du produit
@@ -85,17 +77,25 @@ function addToCart() {
       alert("veuillez choisir une quantité valide");
     } else {
       addCart(productColor, productQuantity);
+      visualEffect();
     }
   });
 }
-// fonction pour l'ajout des items au storage en comparant avec les items déjà dans le storage
-
-/**
- *
- * LUCAS
- */
-
-const retreiveLocalStorage = () => {
+//fonction retour visuel pour l'utilisateur lors du clic sur le bouton d'ajout au panier
+function visualEffect() {
+  const alertBtn = document.createElement("p");
+  const selectorBtn = document.querySelector(".item__content__addButton");
+  selectorBtn.appendChild(alertBtn);
+  alertBtn.innerText = "produit ajouté à votre panier avec succès";
+  selectorBtn.style.display = "flex";
+  selectorBtn.style.alignItems = "center";
+  selectorBtn.style.flexDirection = "column";
+  alertBtn.classList.add("addedToCart");
+  alertBtn.style.color = "yellowgreen";
+  setTimeout("document.querySelector('.addedToCart').remove()", 450);
+}
+// fonction récupération du contenu du local storage
+function retreiveLocalStorage() {
   // On lit le Local Storage et on retourne un tableau Javascript correspondant au panier
   const str = localStorage.getItem("cart");
   let cart = [];
@@ -103,17 +103,13 @@ const retreiveLocalStorage = () => {
     cart = JSON.parse(str);
   }
   return cart;
-};
-
+}
+// fonction d'envoi du produit vers le local storage
 function addCart(productColor, productQuantity) {
   const product = {
-    name: productName,
     id,
     color: productColor,
     quantity: Number(productQuantity),
-    price: productPrice,
-    image: productImage,
-    alt: productTxt,
   };
 
   //1 - Lire les informations du Local Storage
